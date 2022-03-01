@@ -1,12 +1,14 @@
 from ast import Break
 import time
 
+#Starting the activity
 print("Let's count to 10 together")
 
-i = 1
-while i <= 10:
+#Initiating and ending counting
+number = 1
+while number <= 10:
   time.sleep(1)
-  print(i)
-  i += 1
+  print(number)
+  number += 1
 else:
   print("Good job!")
