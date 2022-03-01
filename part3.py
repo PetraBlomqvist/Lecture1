@@ -13,9 +13,7 @@ def PrintCurrentValue():
 #Variable for keeping track of current value
 CurrentValue = 0
 
-
+#Defining which values to add together
 CurrentValue = Additionfunction(1,3)
 CurrentValue = Additionfunction(5,1)
 CurrentValue = Additionfunction(6,7)
-
-PrintCurrentValue()
