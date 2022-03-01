@@ -6,6 +6,8 @@ def Additionfunction(A,B):
     print(result)
     return result 
 
+#Functions
+
 #Print the current value to the console
 def PrintCurrentValue():
     print(CurrentValue)
