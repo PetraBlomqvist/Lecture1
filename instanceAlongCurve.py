@@ -119,6 +119,7 @@ class instanceAlongCurveLocator(OpenMayaMPx.MPxLocatorNode):
                     vValues = OpenMaya.MFloatArray(instanceCount, 0.0)
 
                     # Sample a line, for more user flexibility
+                    # Petra's add: changed xrange to range
                     for i in range(instanceCount):
                         uValues.set(i / float(instanceCount), i)
                         vValues.set(i / float(instanceCount), i)
@@ -131,6 +132,7 @@ class instanceAlongCurveLocator(OpenMayaMPx.MPxLocatorNode):
                         self.rampAmplitudeValues = []
                         self.useDynamicAmplitudeValues = True
 
+                        # Petra's add: changed xrange to range
                         for i in range(resultColors.length()):
                             self.rampAmplitudeValues.append(resultColors[i].length() / math.sqrt(3))
 
@@ -214,6 +216,7 @@ class instanceAlongCurveLocator(OpenMayaMPx.MPxLocatorNode):
                 return outIndices
 
         # Fill remaining expected indices
+        # Petra's add: changed xrange to range
         for i in range(indicesFound, numIndices):
             outIndices[i] = currentAvailableIndex
             currentAvailableIndex += 1
@@ -322,10 +325,12 @@ class instanceAlongCurveLocator(OpenMayaMPx.MPxLocatorNode):
             toRemove = numConnectedElements - expectedInstanceCount
             mdgModifier = OpenMaya.MDGModifier()
 
+            # Petra's add: changed xrange to range
             for i in range(toRemove):
                 outputTranslationPlugElement = outputTranslationPlug.connectionByPhysicalIndex(numConnectedElements - 1 - i)
                 outputTranslationPlugElement.connectedTo(connections, False, True)
 
+                # Petra's add: changed xrange to range
                 for c in range(connections.length()):
                     mdgModifier.deleteNode(connections[c].node())
 
@@ -492,6 +497,7 @@ class instanceAlongCurveLocator(OpenMayaMPx.MPxLocatorNode):
                 inputTransformFn.getRotation(inputTransformRotation, OpenMaya.MSpace.kWorld)
 
             # Make sure there are enough handles...
+            # Petra's add: changed xrange to range
             for i in range(min(count, translateArrayHandle.elementCount())):
 
                 dist = math.fmod(curveStart + math.fmod(lengthIncrement * i + distOffset, effectiveCurveLength), curveLength)
@@ -588,6 +594,7 @@ class instanceAlongCurveLocator(OpenMayaMPx.MPxLocatorNode):
             rampValues = instanceAlongCurveLocator.RampValueContainer(self.thisMObject(), dataBlock, instanceAlongCurveLocator.scaleRampAttr, False, count)
 
             # Make sure there are enough handles...
+            # Petra's add: changed xrange to range
             for i in range(min(count, scaleArrayHandle.elementCount())):
 
                 dist = math.fmod(curveStart + math.fmod(lengthIncrement * i + distOffset, effectiveCurveLength), curveLength)
@@ -615,10 +622,12 @@ class instanceAlongCurveLocator(OpenMayaMPx.MPxLocatorNode):
     # TODO: cache this data to prevent recalculating when there is no manipulator being updated
     def getRotationForParam(self, param, axisHandlesSorted, curveForm, curveMaxParam):
 
+        # Petra's add: changed xrange to range
         indexRange = (-1, -1)
         wrapAround = not (curveForm is OpenMaya.MFnNurbsCurve.kOpen)
 
         # Find the range of indices that make up this curve segment
+        # Petra's add: changed xrange to range
         for i in range(len(axisHandlesSorted)):
 
             # TODO: could use a binary search
@@ -719,6 +728,7 @@ class instanceAlongCurveLocator(OpenMayaMPx.MPxLocatorNode):
         if inputTransformPlug.isConnected():
             inputTransformFn.getRotation(inputTransformRotation, OpenMaya.MSpace.kWorld)
 
+        # Petra's add: changed xrange to range
         for i in range(min(count, rotationArrayHandle.elementCount())):
             
             dist = math.fmod(curveStart + math.fmod(lengthIncrement * i + distOffset, effectiveCurveLength), curveLength)
@@ -1468,6 +1478,7 @@ class instanceAlongCurveCommand(OpenMayaMPx.MPxCommand):
     def findShadingGroup(self, dagPath):
 
         # Search in children first before extending to shape
+        # Petra's add: changed xrange to range
         for child in range(dagPath.childCount()):
             childDagPath = OpenMaya.MDagPath()
             fnDagNode = OpenMaya.MFnDagNode(dagPath.child(child))
@@ -1661,6 +1672,7 @@ class instanceAlongCurveLocatorManip(OpenMayaMPx.MPxManipContainer):
 
         self.manipCount = nodeFn.findPlug(instanceAlongCurveLocator.curveAxisHandleCountAttr).asInt()
 
+        # Petra's add: changed xrange to range
         for i in range(self.manipCount):
             pointOnCurveManip = self.addPointOnCurveManip("pointCurveManip" + str(i), "pointCurve" + str(i))
             discManip = self.addDiscManip("discManip" + str(i), "disc" + str(i))
@@ -1671,6 +1683,7 @@ class instanceAlongCurveLocatorManip(OpenMayaMPx.MPxManipContainer):
         axisHandles = []
         plugArray = nodeFn.findPlug(instanceAlongCurveLocator.curveAxisHandleAttr.compound)
 
+        # Petra's add: changed xrange to range
         for i in range(count):
             plug = plugArray.elementByLogicalIndex(i)
             parameterPlug = plug.child(instanceAlongCurveLocator.curveAxisHandleAttr.parameter)
@@ -1711,6 +1724,7 @@ class instanceAlongCurveLocatorManip(OpenMayaMPx.MPxManipContainer):
             # Build and connect all plugs
             # Note: Previous plugs are still with remnant values (newHandleCount < oldHandleCount),
             # but because when interpolating we just read the handle count attr, it works.
+            # Petra's add: changed xrange to range
             for i in range(self.manipCount):
 
                 # Handle data
@@ -1803,6 +1817,7 @@ class instanceAlongCurveLocatorManip(OpenMayaMPx.MPxManipContainer):
             curveHandleIndex = self.manipIndexCallbacks[manipIndex][1]
             return self.manipIndexCallbacks[manipIndex][0](self.manipHandleList[curveHandleIndex])
 
+        # Petra's add: print lacked parentheses
         print("Manip callback not set; returning invalid data!")
 
         numData = OpenMaya.MFnNumericData()
@@ -1884,6 +1899,7 @@ def getSortedCurveAxisArray(mObject, curveAxisHandleArray, count):
 
     expectedHandleCount = OpenMaya.MFnDependencyNode(mObject).findPlug(instanceAlongCurveLocator.curveAxisHandleCountAttr).asInt()
 
+    # Petra's add: changed xrange to range
     for i in range(min(expectedHandleCount, curveAxisHandleArray.elementCount())):
         curveAxisHandleArray.jumpToArrayElement(i)
         parameterHandle = curveAxisHandleArray.inputValue().child(instanceAlongCurveLocator.curveAxisHandleAttr.parameter)
@@ -1896,5 +1912,7 @@ def getSortedCurveAxisArray(mObject, curveAxisHandleArray, count):
     return sorted(axisHandles, key=getKey)
 
 def printVector(v, s=None):
+    
+    # Petra's add: print lacked parentheses
     print(s + ":" + str(v.x) + ", " + str(v.y) + ", " + str(v.z))
 
